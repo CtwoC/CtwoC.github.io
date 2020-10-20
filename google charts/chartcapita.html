@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Military Spending Comparions</title>
+    <script src="http://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current',{'packages': ['corechart','geochart']});
+        google.charts.setOnLoadCallback(drawAllSheets);
+
+        //draw sheetname
+        function drawSheetName(sheetName, query, responseHandler){
+            var queryString = encodeURIComponent(query);
+            var query = new google.visualization.Query(
+                'https://docs.google.com/spreadsheets/d/1CQO0z9L69az41axQ29uZVXIeNb1VPwPBPANDZuuuhQw/gviz/tq?sheet=' 
+                + sheetName + '&headers=1&tq=' + queryString);
+            query.send(responseHandler);
+        }
+
+        //drawAllSheets
+        function drawAllSheets(){
+            drawSheetName('Per person GDP','SELECT A,G', Per_capita_GDPResponseHandler);
+            drawSheetName('Per person Education','SELECT A,I,C', Per_capita_GDP_Education_ResponseHandler);
+            drawSheetName('Per person Health','SELECT A,I,J', Per_capita_GDP_Health_ResponseHandler);
+            drawSheetName('Per person Military','SELECT A,I,J', Per_capita_GDP_Military_ResponseHandler);
+        } 
+
+        //chart1(per person gdp geochart)
+        function Per_capita_GDPResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1,desc: true});
+
+            var options = {
+                colorAxis: {colors: ['#ff99cc','#33ccff']}, //orange to blue
+                title: 'Top Countries in GDP in 2017 ($)',
+            };
+
+            var chart = new google.visualization.GeoChart(document.getElementById('per_capita_gdp_div'));
+            chart.draw(data,options);
+        }
+
+        //chart 2(Per person educational spending vs gdp bar chart)
+        function Per_capita_GDP_Education_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1,desc: true});
+
+            var options = {
+                title: 'Per capita GDP vs. Education Expenditure (2013)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending($)'},
+                colors:['#33ccff','#cc99ff']
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('per_capita_gdp_education_div'));
+            chart.draw(data,options);
+        }
+
+        //chart 3(Per person health spending vs gdp bar chart)
+        function Per_capita_GDP_Health_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1, desc: true});
+
+            var options = {
+                bars: 'horizontal',
+                annotation:{alwaysOutside: true},
+                title: 'Per capita GDP vs. Health Expenditure (2017)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending($)'},
+                colors:['#33ccff','#00ff99']
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('per_capita_gdp_health_div'))
+            chart.draw(data,options)
+        }
+
+        //chart 4(Per person Military spending vs gdp bar chart)
+        function Per_capita_GDP_Military_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1, desc: true});
+
+            var options = {
+                bars: 'horizontal',
+                annotation:{alwaysOutside: true},
+                title: 'Per capita GDP vs. Military Expenditure in 2013 (2017)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending(Billion $)'},
+                colors:['#33ccff','#ff6699']
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('per_capita_gdp_military_div'))
+            chart.draw(data,options)
+        }
+
+    </script>  
+</head>
+
+<body>
+    <h3>Per Person GDP</h3>
+    <div id='per_capita_gdp_div' style='width: 900px; height: 500px;'></div>
+
+    <h3>Per Person GDP and Education</h3>
+    <div id='per_capita_gdp_education_div' style='width: 900px; height: 500px;'></div>
+
+    <h3>Per Person GDP and Health</h3>
+    <div id='per_capita_gdp_health_div' style='width: 900px; height: 500px;'></div>
+
+    <h3>Per Person GDP and Military</h3>
+    <div id='per_capita_gdp_military_div' style='width: 900px; height: 500px;'></div>
+</body>

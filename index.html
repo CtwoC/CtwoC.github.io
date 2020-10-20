@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content = 'width=device-with, initial-scale=1.0'>
+    <!-- Cunstom Styling-->
+    <link rel="stylesheet" href="css/style.css">
+    <title>Educational, Healthcare and Military Spending Analysis(Home)</title>
+    <script src="http://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current',{'packages': ['corechart','geochart']});
+        google.charts.setOnLoadCallback(drawAllSheets);
+
+        //draw sheetname
+        function drawSheetName(sheetName, query, responseHandler){
+            var queryString = encodeURIComponent(query);
+            var query = new google.visualization.Query(
+                'https://docs.google.com/spreadsheets/d/1CQO0z9L69az41axQ29uZVXIeNb1VPwPBPANDZuuuhQw/gviz/tq?sheet=' 
+                + sheetName + '&headers=1&tq=' + queryString);
+            query.send(responseHandler);
+        }
+
+        function drawAllSheets(){
+            drawSheetName('GDP','SELECT A,G', GDPResponseHandler);
+        } 
+
+        //chart1(gdp geochart)
+        function GDPResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1,desc: true});
+
+            var options = {
+                colorAxis: {colors: ['#ff99cc','#33ccff']}, //orange to blue
+                title: 'Top Countries in GDP in 2017 ($)',
+            };
+
+            var chart = new google.visualization.GeoChart(document.getElementById('gdp_div'));
+            chart.draw(data,options);
+        }
+    </script>
+</head> 
+
+<body>
+    <div id='main'>
+        <div id="header">
+            <div id="logo">
+                <div id="logo_image">
+                    <img class="icon" src="images/earth.jpeg" alt="Icon">
+                </div>
+                <div id="logo_text">
+                    <h1>Educational, Healthcare and Military Spending Analysis</h1>
+                </div><!-- logo_text -->
+                <div id="logo_name">Zichu Chen</div>
+            </div><!-- logo -->
+            <div id="menubar">
+                <ul id="menu">
+                    <li class="selected"><a href="index.html">Home</a></li>
+                    <li><a href="country.html">Country Spending & GDP Analysis</a></li>
+                    <li><a href="person.html">Per Person Spending & GDP Analysis</a></li>
+                    <li><a href="trending.html">Trending Analysis</a></li>
+                </ul>
+            </div><!-- menubar -->
+        </div><!-- header -->
+    </div><!--main-->
+
+
+    <div id="site_content"> 
+        <div id="content">
+            <h2>Introduction</h2>
+            <div id="attach_here"></div>
+            <h6>
+                This is the first individual project at visualization of complex data class of Zichu Chen. 
+                All the data is downloaded from <a href="https://data.worldbank.org/" target>Word Bank Open Data</a>. 
+                Countries with top 10 GDP are chosen and the data of spending on Military, Healthcare and Education from 2012-2017 are cleaned and saved at <a href='https://docs.google.com/spreadsheets/d/1CQO0z9L69az41axQ29uZVXIeNb1VPwPBPANDZuuuhQw/gviz/tq?sheet=' 
+                target>Google Sheet</a>. Since education expenditure data of most countries were missing, only the complete part in 2013 would be use for visualization.
+            </h6>
+
+            <h3>GDP(2017/billion $)</h3>
+            <div id='gdp_div' style='width: 900px; height: 500px;'></div>
+
+        </div><!-- content-->
+    </div><!-- site_content -->
+</body>

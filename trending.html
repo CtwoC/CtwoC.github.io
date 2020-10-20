@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content = 'width=device-with, initial-scale=1.0'>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Educational, Healthcare and Military Spending Analysis(Trending)</title>
+    <script src="http://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current',{'packages': ['corechart','geochart']});
+        google.charts.setOnLoadCallback(drawAllSheets);
+
+        //draw sheetname
+        function drawSheetName(sheetName, query, responseHandler){
+            var queryString = encodeURIComponent(query);
+            var query = new google.visualization.Query(
+                'https://docs.google.com/spreadsheets/d/1CQO0z9L69az41axQ29uZVXIeNb1VPwPBPANDZuuuhQw/gviz/tq?sheet=' 
+                + sheetName + '&headers=1&tq=' + queryString);
+            query.send(responseHandler);
+        }
+
+        //drawAllSheets
+        function drawAllSheets(){
+            drawSheetName('Healthgrowing','SELECT A,B,C,D,E,F,G,H,I,J,K', HealthGrowingNumberResponseHandler);
+            drawSheetName('Healthgrowing','SELECT A,M,N,O,P,Q,R,S,T,U,V', HealthGrowingPercentResponseHandler);
+            drawSheetName('Educationgrowing','SELECT A,B,C,D,E,F', EducationGrowingNumberResponseHandler);
+            drawSheetName('Educationgrowing','SELECT A,H,I,J,K,L', EducationGrowingPercentResponseHandler);
+            drawSheetName('Military Proportion','SELECT A,B,C,D,E,F,G,H,I,J,K', MilitaryProportionResponseHandler);
+
+        } 
+
+        //chart1(health growing line chart)
+        function HealthGrowingNumberResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: 'Health Expenditure Growing(Billion $)',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Growing(Billion $)'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('health_growing_number_div'));
+            chart.draw(data, options);
+        }
+
+        //chart2(health growing percent line chart)
+        function HealthGrowingPercentResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: 'Health Expenditure Growing(%)',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Growing(%)'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('health_growing_percent_div'));
+            chart.draw(data, options);
+        }
+
+        //chart3(education growing line chart)
+        function EducationGrowingNumberResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: 'Education Expenditure Growing(Billion $)',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Growing(Billion $)'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('education_growing_number_div'));
+            chart.draw(data, options);
+        }
+
+        //chart4(education growing percent line chart)
+        function EducationGrowingPercentResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: 'Education Expenditure Growing(%)',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Growing(%)'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('education_growing_percent_div'));
+            chart.draw(data, options);
+        }
+
+        //chart5(military proportion growing percent line chart)
+        function MilitaryProportionResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: 'Military Proportion(%)',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: '%'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('military_proportion_div'));
+            chart.draw(data, options);
+        }
+    </script> 
+</head> 
+
+<body>
+    <div id='main'>
+        <div id="header">
+            <div id="logo">
+                <div id="logo_image">
+                    <img class="icon" src="images/earth.jpeg" alt="Icon">
+                </div>
+                <div id ="logo_text">
+                    <h1>Educational, Healthcare and Military Spending Analysis</h1>
+                </div><!-- logo_text -->
+                <div id="logo_name">Zichu Chen</div>
+            </div><!-- logo -->
+            <div id="menubar">
+                <ul id="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="country.html">Country Spending & GDP Analysis</a></li>
+                    <li><a href="person.html">Per Person Spending & GDP Analysis</a></li>
+                    <li class="selected"><a href="trending.html">Trending Analysis</a></li>
+                </ul>
+            </div><!-- menubar -->
+        </div><!-- header -->
+    </div><!--main-->
+
+    <div id="site_content"> 
+        <div id="content">
+            <h3>Health Growing(Number)</h3>
+            <div id='health_growing_number_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Health Growing(Percent)</h3>
+            <div id='health_growing_percent_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Education Growing(Number)</h3>
+            <div id='education_growing_number_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Education Growing(Percent)</h3>
+            <div id='education_growing_percent_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Military Spending Proportion</h3>
+            <div id='military_proportion_div' style='width: 900px; height: 500px;'></div>
+        </div><!-- content-->
+    </div><!-- site_content -->
+</body>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content = 'width=device-with, initial-scale=1.0'>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Educational, Healthcare and Military Spending Analysis(Country)</title>
+    <script src="http://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        google.charts.load('current',{'packages': ['corechart','geochart']});
+        google.charts.setOnLoadCallback(drawAllSheets);
+
+        //draw sheetname
+        function drawSheetName(sheetName, query, responseHandler){
+            var queryString = encodeURIComponent(query);
+            var query = new google.visualization.Query(
+                'https://docs.google.com/spreadsheets/d/1CQO0z9L69az41axQ29uZVXIeNb1VPwPBPANDZuuuhQw/gviz/tq?sheet=' 
+                + sheetName + '&headers=1&tq=' + queryString);
+            query.send(responseHandler);
+        }
+
+        //drawAllSheets
+        function drawAllSheets(){
+            drawSheetName('Military1','SELECT I,J,K,L,M,N,O,P,Q,R,S', MilitaryResponseHandler);
+            drawSheetName('Health1','SELECT I,J,K,L,M,N,O,P,Q,R,S', HealthResponseHandler);
+            drawSheetName('Education','SELECT A,C', EducationResponseHandler);
+            drawSheetName('Compare','SELECT A,B,C,D', GDP_Military_Health_ResponseHandler);
+            drawSheetName('Compare','SELECT A,C,D', Military_Health_ResponseHandler);
+            drawSheetName('Compare2','SELECT A,B,C,D', Military_Health_Education_ResponseHandler);
+        } 
+
+        //chart2(military line chart)
+        function MilitaryResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: '10 Countries in Military Expenditure',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Spending(Billion $)'},
+                hAxis :{title: 'Year'},
+                
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('military_div'));
+            chart.draw(data, options);
+        }
+
+         //chart3(health line chart)
+         function HealthResponseHandler(response){
+            var data = response.getDataTable();
+            var options = {
+                title: '10 Countries in Health Expenditure',
+                curveType: 'function',
+                legend: { position: 'bottom' },
+                vAxis :{title: 'Spending(Billion $)'},
+                hAxis :{title: 'Year'}
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('health_div'));
+            chart.draw(data, options);
+        }
+
+        //chart 4(Education bar chart)
+        function EducationResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1,desc: true});
+
+            var options = {
+                title: '7 Countries in Education Expenditure in 2013',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending(Billion $)'}
+            };
+
+            var chart = new google.visualization.BarChart(document.getElementById('education_div'));
+            chart.draw(data,options);
+        }
+
+        //chart 5(Military&GDP in 2017)
+        function GDP_Military_Health_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1, desc: true});
+
+            var options = {
+                bars: 'horizontal',
+                annotation:{alwaysOutside: true},
+                title: 'Military Spending vs. GDP (2017)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending(Billion $)'}
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('gdp_military_div'))
+            chart.draw(data,options)
+        }
+
+        function Military_Health_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1, desc: true});
+
+            var options = {
+                bars: 'horizontal',
+                annotation:{alwaysOutside: true},
+                title: 'Military Spending vs. Health Spending (2017)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending(Billion $)'}
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('military_health_div'))
+            chart.draw(data,options)
+        }
+
+        function Military_Health_Education_ResponseHandler(response){
+            var data = response.getDataTable();
+            data.sort({column: 1, desc: true});
+
+            var options = {
+                bars: 'horizontal',
+                annotation:{alwaysOutside: true},
+                title: 'Military, Health and Education Spending (2013)',
+                vAxis :{title: 'Country'},
+                hAxis :{title: 'Spending(Billion $)'}
+            };
+            var chart = new google.visualization.BarChart(document.getElementById('military_health_education_div'))
+            chart.draw(data,options)
+        }
+    </script>
+</head> 
+
+<body>
+    <div id='main'>
+        <div id="header">
+            <div id="logo">
+                <div id="logo_image">
+                    <img class="icon" src="images/earth.jpeg" alt="Icon">
+                </div>
+                <div id ="logo_text">
+                    <h1>Educational, Healthcare and Military Spending Analysis</h1>
+                </div><!-- logo_text -->
+                <div id="logo_name">Zichu Chen</div>
+            </div><!-- logo -->
+            <div id="menubar">
+                <ul id="menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li class="selected"><a href="country.html">Country Spending & GDP Analysis</a></li>
+                    <li><a href="person.html">Per Person Spending & GDP Analysis</a></li>
+                    <li><a href="trending.html">Trending Analysis</a></li>
+                </ul>
+            </div><!-- menubar -->
+        </div><!-- header -->
+    </div><!--main-->
+
+    <div id="site_content"> 
+        <div id='content'>
+            <h3>Military Expenditure(2012-2017)</h3>
+            <div id='military_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Health Expenditure(2012-2017)</h3>
+            <div id='health_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Education Expenditure(2013)</h3>
+            <div id='education_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>GDP & Military(2017)</h3>
+            <div id='gdp_military_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Military & Health(2017)</h3>
+            <div id='military_health_div' style='width: 900px; height: 500px;'></div>
+
+            <h3>Military & Health & Education(2013)</h3>
+            <div id='military_health_education_div' style='width: 900px; height: 500px;'></div>
+        </div>
+    </div><!-- site_content -->
+</body>
