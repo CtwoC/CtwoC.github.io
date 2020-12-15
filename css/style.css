@@ -30,7 +30,7 @@ p{
 #navbar {
   width: 100%;
   overflow: auto;
-  background-color: rgb(252, 252, 252);
+  background-color: rgb(237, 237, 237);
   position: sticky;
   z-index: 9999;
 }
@@ -54,9 +54,15 @@ p{
 }
 
 #navbar a.active {
-  background-color: rgb(249, 249, 249);
-  color: rgb(0, 0, 0);
+  background-color: #ddd;
+  color: rgb(255, 255, 255);
   border-bottom: 3px solid red;
+}
+
+.topnav-right {
+  padding-top: 50px;
+  padding-right: 10px;
+  float: right;
 }
 
 .content {
@@ -80,7 +86,7 @@ p{
 
 #c_1{
   float: left;
-  padding: 30px 400px 0px 50px;
+  padding: 30px 300px 0px 50px;
   text-align: left;
 }
 
